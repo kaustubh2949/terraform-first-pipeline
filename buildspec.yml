@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing Terraform...
+      - sudo yum install -y yum-utils
+      - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - sudo yum -y install terraform
+      
+  pre_build:
+    commands:
+      - echo Moving to Terraform code directory..
+      - cd resources/network/networkcomponents
+
+  build:
+    commands:
+      - echo Running Terraform Plan
+      - terraform plan
+      - echo Running Terraform Apply
+      - terraform apply --auto-approve tfplan
+
+artifacts:
+  files:
+    - '**/*'
