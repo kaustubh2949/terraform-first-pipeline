@@ -4,21 +4,23 @@ phases:
   install:
     commands:
       - echo Installing Terraform...
-      - sudo yum install -y yum-utils
-      - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-      - sudo yum -y install terraform
-      
+      - curl -O https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+      - unzip terraform_1.5.7_linux_amd64.zip
+      - mv terraform /usr/local/bin/
   pre_build:
     commands:
-      - echo Moving to Terraform code directory..
-      - cd resources/network/networkcomponents
-
+      - echo Initializing Terraform...
+      - terraform init
   build:
     commands:
-      - echo Running Terraform Plan
-      - terraform plan
-      - echo Running Terraform Apply
-      - terraform apply --auto-approve tfplan
+      - echo Validating Terraform...
+      - terraform validate
+      - echo Planning Terraform...
+      - terraform plan -out=tfplan
+  post_build:
+    commands:
+      - echo Applying Terraform...
+      - terraform apply -auto-approve tfplan
 
 artifacts:
   files:
